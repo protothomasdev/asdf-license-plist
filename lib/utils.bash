@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for license-plist.
 GH_REPO="https://github.com/mono0926/LicensePlist"
 TOOL_NAME="license-plist"
 TOOL_TEST="license-plist --version"
@@ -31,8 +30,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if license-plist has other means of determining installable versions.
 	list_github_tags
 }
 
@@ -41,11 +38,10 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for license-plist
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/${version}/portable_licenseplist.zip"
 
 	echo "* Downloading $TOOL_NAME release $version..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+	curl -o "$filename" -L "$url" || fail "Could not download $url"
 }
 
 install_version() {
@@ -63,7 +59,9 @@ install_version() {
 
 		# TODO: Assert license-plist executable exists.
 		local tool_cmd
+
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
+		echo "Tool Command: $tool_cmd, Install Path: $install_path"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
