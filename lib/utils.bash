@@ -13,7 +13,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if license-plist is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
 	curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -26,7 +25,7 @@ sort_versions() {
 list_github_tags() {
 	git ls-remote --tags --refs "$GH_REPO" |
 		grep -o 'refs/tags/.*' | cut -d/ -f3- |
-		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+		sed 's/^v//'
 }
 
 list_all_versions() {
@@ -57,7 +56,6 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert license-plist executable exists.
 		local tool_cmd
 
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
